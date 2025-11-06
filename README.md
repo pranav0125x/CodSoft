@@ -1,1 +1,3 @@
 # CodSoft
+
+Artificial Intelligence Internship
