@@ -168,7 +168,7 @@ class ChatBotAISimple{
                 continue;
             }
             if(input.equals("exit") || input.equals("end")){
-                System.out.println("Bye! I'll be here, recharging my virtual brain.");
+                System.out.println("ChatBot: Bye! I'll be here, recharging my virtual brain.");
                 System.out.println(":)");
                 break;
             }
