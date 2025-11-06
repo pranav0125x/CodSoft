@@ -1,0 +1,179 @@
+import java.awt.Desktop;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.util.*;
+
+class ChatBotAISimple{
+
+    private static String extractName(String input) {
+        input = input.toLowerCase();
+        input = input.replace("my name is", "").trim();
+
+        if(input.isEmpty()){
+            return "Human";
+        }
+        return input.substring(0,1).toUpperCase() + input.substring(1);
+    }
+    private static String calcMat(String in){
+        String res = in.replaceAll("[^0-9+\\-*/]", " ").trim();
+        try{
+            if(res.contains("+")) {
+                String[] parts = res.split("\\+");
+                return "The result is: " + (Integer.parseInt(parts[0]) + Integer.parseInt(parts[1]));
+            } 
+            if(res.contains("-")) {
+                String[] parts = res.split("-");
+                return "The result is: " + (Integer.parseInt(parts[0]) - Integer.parseInt(parts[1]));
+            } 
+            if(res.contains("*")) {
+                String[] parts = res.split("\\*");
+                return "The result is: " + (Integer.parseInt(parts[0]) * Integer.parseInt(parts[1]));
+            } 
+            if(in.contains("/")) {
+            String[] parts = in.split("/");
+            int a = Integer.parseInt(parts[0]);
+            int b = Integer.parseInt(parts[1]);
+            
+            if (b == 0){
+                return"Cannot divide by zero!";
+            }
+            return "The result is: " + ((double)a / b);
+        }
+        }
+        catch(Exception e){
+            System.out.println("I do simple maths, not rocket science. :(");
+        }
+        return "Please use '+', '-', '*', or '/'";
+    }
+
+    private static String reply(String in){
+        String i = in.toLowerCase();
+        Random r = new Random();
+        Scanner sc = new Scanner(System.in);
+        if(i.contains("hi") || i.contains("hey") || i.contains("hello") || i.contains("greetings") || i.contains("good morning") || i.contains("good afternoon") || i.contains("good evening")){
+            String[] str = {
+                "Hello there! How can i assist you today?",
+                "Hi there! What can I do for you?",
+                "Greetings! How may I assist you?"
+            };
+            return str[r.nextInt(str.length)];
+        }
+        if (i.matches(".*my name is.*")) {
+            String name = extractName(i);
+            return "Nice to meet you, " + name + "!";
+        }
+        if(i.contains("how are you")){
+            return "I'm all good. My life is just ones and zeros.";
+        }
+        if(i.contains("who are you")){
+            return "I'm your friendly neighbourhood chatbot. No spider powers though.";
+        }
+        if(i.contains("weather") || i.contains("forecast") || i.contains("temperature")){
+            System.out.println("If you would like to know today's weather/forecast/temperature, the website will open automatically in your browser.");
+            System.out.println("If you want to continue, type yes/no.");
+            System.out.print("You: ");
+            String ans = sc.nextLine();
+            if(ans.contains("yes")){
+                if(ans.contains("yes")){
+                    System.out.print("Type your city: ");
+                    String city = sc.nextLine();
+                    try {
+                        String url = "https://www.accuweather.com/en/search-locations?query=" + 
+                        URLEncoder.encode(city, "UTF-8");
+                        Desktop.getDesktop().browse(new URI(url));
+                    }   
+                    catch (Exception e) {
+                        return "Couldn't open browser.";
+                    }
+                    return "Opening weather report in your browser...";
+                }
+            }
+            else{
+                return "Aborted";
+            }
+        }
+        if(i.contains("time") || i.contains("date") ||i.contains("day")){
+            System.out.println("If you would like to know the current date/day/time, the website will open automatically in your browser.");
+            System.out.println("If you want to continue, type yes/no.");
+            System.out.print("You: ");
+            String ans = sc.nextLine();
+            if(ans.contains("yes")){
+                System.out.print("Type your country/city: ");
+                String country = sc.nextLine();
+                try {
+                        String url = "https://time.is/" + 
+                        URLEncoder.encode(country, "UTF-8");
+                        Desktop.getDesktop().browse(new URI(url));
+                    }   
+                    catch (Exception e) {
+                        return "Couldn't open browser.";
+                    }
+                    return "Opening weather report in your browser...";
+            }
+            else{
+                return "Aborted";
+            }
+        }
+        if(i.contains("thanks") || i.contains("thank you") || i.contains("thank") || i.contains("appreciate")){
+            String[] thanks = {
+                "You're very welcome! Let me know if you need anything else.",
+                "Happy to help. Is there anything else I can do for you today?",
+                "Glad I could assist! Feel free to ask if you have more questions."
+            };
+            return thanks[r.nextInt(thanks.length)];
+        }
+        if(i.contains("joke") || i.contains("jokes") || i.contains("funny") || i.contains("more")) {
+            String[] joke = {
+                "Why don't programmers like nature? It has too many bugs.",
+                "Why did the computer catch a cold? It left its Windows open.",
+                "Why was the Java developer broke? Because he used up all his cache.",
+                "I told my laptop a joke. It didn't laugh. It just crashed.",
+                "Why do coders prefer dark mode? Because light attracts bugs.",
+                "Why did the scarecrow become a successful developer? He was outstanding in his field.",
+                "Why don't robots panic? They have nerves of steel.",
+                "What's a computer's favorite snack? Microchips.",
+                "Why do phones ring? Because they can't talk.",
+                "Why was the math book sad? It had too many problems."
+            };
+            return joke[r.nextInt(joke.length)];
+        }
+        if(i.contains("+")|| i.contains("-") || i.contains("*") || i.contains("/")){
+            try {
+                return calcMat(i);
+            } 
+            catch (Exception e) {
+                return "I couldn't calculate that. Try simple expressions";
+            }
+        }
+
+        String[] basic= {
+            "I'm sorry, I didn't quite catch that. Could you say it again?",
+            "I'm not sure I understand. Can you rephrase that?",
+            "Oops, I didn't get that. What was that?",
+            "Sorry, I'm drawing a blank on that one. Can you say it another way?"
+        };
+        return basic[r.nextInt(basic.length)];
+    }
+
+    public static void main(String args[]){
+        Scanner sc = new Scanner(System.in);
+        Random r = new Random();
+        System.out.println("Hey there! I'm your chatbot buddy. I can chat, joke, help you out, tell you the weather, check the date, time, and day, and even do simple maths.");
+        System.out.println("What can I do for you today?");
+        System.out.println("(enter 'exit' or 'end' to end the chat).");
+        while(true){
+            System.out.print("You: ");
+            String input = sc.nextLine();
+            if(input.trim().isEmpty()){
+                continue;
+            }
+            if(input.equals("exit") || input.equals("end")){
+                System.out.println("Bye! I'll be here, recharging my virtual brain.");
+                System.out.println(":)");
+                break;
+            }
+            String result = reply(input);
+            System.out.println("ChatBot: "+result+"\n");
+        }
+    }
+}
